@@ -5,7 +5,7 @@ resource "aws_lambda_function" "s3_trigger_lambda" {
   runtime       = "python3.8"
 
   #path to the lambda  code package
-  filename         = "${path.module}/fucntion.zip"
+  filename         = "${path.module}/function.zip"
   source_code_hash = filebase64sha256("${path.module}/function.zip")
 }
 
