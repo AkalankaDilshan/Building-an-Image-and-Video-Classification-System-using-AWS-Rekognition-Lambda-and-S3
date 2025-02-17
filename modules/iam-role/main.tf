@@ -1,6 +1,6 @@
 #IAM Role for Lambda 
 resource "aws_iam_role" "lambda_role" {
-  name = "lambda_rekognition_s3_sns_role"
+  name = var.role_name
 
   assume_role_policy = jsondecode({
     Version = "2012-10-17"
