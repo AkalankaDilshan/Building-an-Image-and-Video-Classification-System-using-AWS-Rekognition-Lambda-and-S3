@@ -9,9 +9,21 @@ resource "aws_lambda_function" "s3_trigger_lambda" {
   source_code_hash = filebase64sha256("${path.module}/function.zip")
 }
 
-# DynamoDB Stream Trigger for Lambda
-resource "aws_lambda_event_source_mapping" "s3_trigger" {
-  event_source_arn  = var.trigger_source_arn #here i added aws_s3_bucket.resource_bucket.arn
-  function_name     = aws_lambda_function.s3_trigger_lambda.arn
-  starting_position = "LATEST"
+# S3 Bucket notification Configuration
+resource "aws_s3_bucket_notification" "bucket_notification" {
+  bucket = var.s3_bucket_name
+
+  lambda_function {
+    lambda_function_arn = aws_lambda_function.s3_trigger_lambda.arn
+    events              = ["s3:ObjectCreated:*"]
+  }
+}
+
+# Lambda Permission to Allow S3 to Invoke the Lambda Function
+resource "aws_lambda_permission" "allow_s3" {
+  statement_id  = "AllowExecutionFromS3Bucket"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.s3_trigger_lambda.function_name
+  principal     = "s3.amazonaws.com"
+  source_arn    = "arn:aws:s3:::${var.s3_bucket_name}"
 }
