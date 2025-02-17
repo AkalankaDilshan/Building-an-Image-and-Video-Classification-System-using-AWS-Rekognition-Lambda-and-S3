@@ -5,7 +5,7 @@ resource "random_string" "bucket_suffix" {
 }
 
 resource "aws_s3_bucket" "resource_bucket" {
-  bucket        = "${var.bucket_prefix}-${random_string.bucket_suffix}"
+  bucket        = "${var.bucket_prefix}-${random_string.bucket_suffix.result}"
   force_destroy = true
 
   tags = {
