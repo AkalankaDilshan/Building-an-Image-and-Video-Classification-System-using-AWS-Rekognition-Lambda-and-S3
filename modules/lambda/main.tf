@@ -4,4 +4,14 @@ resource "aws_lamda_function" "s3_trigger_lambda" {
   handler       = "lambda_function.lambda_handler"
   runtime       = "python3.8"
 
+  #path to the lambda  code package
+  filename         = "${path.module}/fucntion.zip"
+  source_code_hash = filebase64sha256("${path.moudle}/function.zip")
+}
+
+# DynamoDB Stream Trigger for Lambda
+resource "aws_lambda_event_source_mapping" "s3_trigger" {
+  event_source_arn  = var.trigger_source_arn
+  function_name     = aws_lamda_function.s3_trigger_lambda.arn
+  starting_position = "LATEST"
 }
