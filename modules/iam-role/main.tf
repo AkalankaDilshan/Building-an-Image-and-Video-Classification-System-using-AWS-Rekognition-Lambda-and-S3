@@ -19,14 +19,42 @@ resource "aws_iam_role" "lambda_role" {
 # create Iam role policy data 
 data "aws_iam_policy_document" "polices" {
   version = "2012-10-17"
+  # Allow Rekognition action
   statement {
     effect = "Allow"
     actions = [
-      "rekognition:*",
-      "s3:*",
-      "sns:*"
+      "rekognition:*"
     ]
+    resources = ["*"]
+  }
 
+  # Allow S3 action 
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:GetObject",
+      "s3:PutObject"
+    ]
+    resources = ["*"]
+  }
+
+  # Allow SNS action 
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:*"
+    ]
+    resources = ["*"]
+  }
+
+  # Allow CloudWatch Logs actions 
+  statement {
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
     resources = ["*"]
   }
 }
