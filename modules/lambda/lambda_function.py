@@ -18,7 +18,7 @@ def lambda_handler(event, context) :
      output_key = 'output/rekognition_response.json'
      response = {'Status' : 'Not Found', 'body' : []}
      
-     rekognition_client = boto3.client('rekognition')
+     rekognition_client = boto3.client('rekognition', region_name="eu-north-1")
      
      try:
           response_rekognition = rekognition_client.detect_labels(
