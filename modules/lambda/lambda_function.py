@@ -13,8 +13,8 @@ s3_client = boto3.client('s3')
 def lambda_handler(event, context) : 
      
      logger.info(event)
-     bucket = event['Records'][0]['bucket']['name']
-     image = event['Records'][0]['object']['key']
+     bucket = event['Records'][0]['s3']['bucket']['name']
+     image = event['Records'][0]['s3']['object']['key']
      output_key = 'output/rekognition_response.json'
      response = {'Status' : 'Not Found', 'body' : []}
      
