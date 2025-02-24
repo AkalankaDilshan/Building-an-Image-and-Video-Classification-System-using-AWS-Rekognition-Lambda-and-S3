@@ -3,7 +3,7 @@ import boto3
 import logging
 
 logger = logging.getLogger()
-logging.setLevel(logging.INFO)
+logger.setLevel(logging.INFO)
 
 
 LABEL = 'cat'
@@ -47,7 +47,7 @@ def lambda_handler(event, context) :
                     response['body'].append(response_rekognition['Labels']) 
 
      except Exception as error:
-          print(error)          
+          logger.error(error)          
           
      
      s3_client.put_object(
