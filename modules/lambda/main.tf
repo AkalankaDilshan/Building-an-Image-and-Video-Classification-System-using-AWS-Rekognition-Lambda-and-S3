@@ -3,11 +3,12 @@ resource "aws_lambda_function" "s3_trigger_lambda" {
   role          = var.iam_role_arn
   handler       = "lambda_function.lambda_handler"
   runtime       = "python3.8"
-  timeout       = 180
 
   #path to the lambda  code package
   filename         = "${path.module}/function.zip"
   source_code_hash = filebase64sha256("${path.module}/function.zip")
+
+  timeout = 180
 }
 
 # S3 Bucket notification Configuration
