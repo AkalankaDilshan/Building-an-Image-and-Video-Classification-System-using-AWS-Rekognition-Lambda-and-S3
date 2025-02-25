@@ -6,7 +6,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-LABEL = 'cat'
+LABEL = 'Dog'
 
 s3_client = boto3.client('s3')
 
@@ -18,7 +18,7 @@ def lambda_handler(event, context) :
      output_key = 'output/rekognition_response.json'
      response = {'Status' : 'Not Found', 'body' : []}
      
-     rekognition_client = boto3.client('rekognition', region_name="eu-north-1")
+     rekognition_client = boto3.client('rekognition')
      
      try:
           response_rekognition = rekognition_client.detect_labels(
