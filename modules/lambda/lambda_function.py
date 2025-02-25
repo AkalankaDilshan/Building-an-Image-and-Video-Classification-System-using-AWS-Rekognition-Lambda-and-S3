@@ -1,24 +1,31 @@
 import json
 import boto3
 import logging
+from datetime import datetime
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-LABEL = 'Dog'
+LABEL = 'cat'
 
 s3_client = boto3.client('s3')
+rekognition_client = boto3.client('rekognition')
 
 def lambda_handler(event, context) : 
      
      logger.info(event)
      bucket = event['Records'][0]['s3']['bucket']['name']
      image = event['Records'][0]['s3']['object']['key']
-     output_key = 'output/rekognition_response.json'
+     
+     #Create Unique name for respond
+     image_name = image.split('/')[-1]
+     timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+     output_key = f'output/{image_name}_{timestamp}_rekognition_response.json'
+     
      response = {'Status' : 'Not Found', 'body' : []}
      
-     rekognition_client = boto3.client('rekognition')
+     
      
      try:
           response_rekognition = rekognition_client.detect_labels(
@@ -31,15 +38,15 @@ def lambda_handler(event, context) :
                MinConfidence = 70
           )
      
-          detected_lables = []
+          detected_labels = []
      
-          if response_rekognition['Labels']:
+          if 'Labels' in response_rekognition:
                for label in response_rekognition['Labels']:
-                    detected_lables.append(label['Name'].lower())
-               print(detected_lables)
+                    detected_labels.append(label['Name'].lower())
+               logger.info(f"Detected labels: {detected_labels}")
           
           
-               if LABEL in detected_lables:
+               if LABEL.lower in detected_labels:
                     response['Status'] = f"Success.! {LABEL} found"
                     response['body'].append(response_rekognition['Labels']) 
                else:
@@ -47,14 +54,18 @@ def lambda_handler(event, context) :
                     response['body'].append(response_rekognition['Labels']) 
 
      except Exception as error:
-          logger.error(error)          
+          logger.exception(f"Error calling Rekognition:{error}")
+          response['Status'] = f"Error: {str(error)}"          
           
-     
-     s3_client.put_object(
-          Bucket = bucket,
-          Key = output_key,
-          Body = json.dumps(response, indent=4)
-     )
+     try:
+          s3_client.put_object(
+               Bucket = bucket,
+               Key = output_key,
+               Body = json.dumps(response, indent=4)
+          )
+     except Exception as error :
+          logger.exception(f"Error uploading to S3:{error}")
+          response['Status'] = f"Error: {str(error)}"
      
      return response     
      
