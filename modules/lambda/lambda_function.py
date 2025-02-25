@@ -55,7 +55,7 @@ def lambda_handler(event, context) :
 
      except Exception as error:
           logger.exception(f"Error calling Rekognition:{error}")
-          response['Status'] = f"Error: {str(error)}"          
+                   
           
      try:
           s3_client.put_object(
@@ -65,7 +65,7 @@ def lambda_handler(event, context) :
           )
      except Exception as error :
           logger.exception(f"Error uploading to S3:{error}")
-          response['Status'] = f"Error: {str(error)}"
+          
      
      return response     
      
