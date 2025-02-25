@@ -23,7 +23,7 @@ def lambda_handler(event, context) :
      timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
      output_key = f'output/{image_name}_{timestamp}_rekognition_response.json'
      
-     response = {'Status' : 'Not Found', 'body' : []}
+     response = {'Status' : ' ', 'body' : []}
      
      
      
@@ -55,7 +55,7 @@ def lambda_handler(event, context) :
 
      except Exception as error:
           logger.exception(f"Error calling Rekognition:{error}")
-                   
+          return response  # Stop the function and return the error response
           
      try:
           s3_client.put_object(
