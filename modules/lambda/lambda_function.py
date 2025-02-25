@@ -46,7 +46,7 @@ def lambda_handler(event, context) :
                logger.info(f"Detected labels: {detected_labels}")
           
           
-               if LABEL.lower in detected_labels:
+               if LABEL in detected_labels:
                     response['Status'] = f"Success.! {LABEL} found"
                     response['body'].append(response_rekognition['Labels']) 
                else:
