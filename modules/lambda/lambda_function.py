@@ -7,7 +7,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-LABEL = 'Cat'
+LABEL = 'cat'
 
 s3_client = boto3.client('s3')
 rekognition_client = boto3.client('rekognition')
