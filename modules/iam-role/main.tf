@@ -42,7 +42,7 @@ data "aws_iam_policy_document" "polices" {
   statement {
     effect = "Allow"
     actions = [
-      "s3:*"
+      "sns:Publish"
     ]
     resources = ["*"]
   }
